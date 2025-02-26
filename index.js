@@ -39,51 +39,89 @@ const returnRecipeNamesByAuthor = (recipeList, author) => {
   return nameList;
 };
 
-console.log('NEW EXERCISE');
-
-console.log(returnRecipeNamesByAuthor(cakeRecipes, "Mary cadogan"));
+// console.log(returnRecipeNamesByAuthor(cakeRecipes, "Mary cadogan"));
 
 
-// Part 2
+// function that returns a list of recipes that contain a given ingredient. The function takes a list of recipes as input and an ingredient as a string.
+// return the names of the recipes that contain the ingredient.
 
-const displayMenu = () => {
-  console.log("\nRecipe Management System Menu:");
-  console.log("1. Show All Authors");
-  console.log("2. Show Recipe names by Author");
-  console.log("3. Show Recipe names by Ingredient");
-  console.log("4. Get Recipe by Name");
-  console.log("5. Get All Ingredients of Saved Recipes");
-  console.log("0. Exit");
-  const choice = prompt("Enter a number (1-5) or 0 to exit: ");
-  return parseInt(choice);
-}
+const returnRecipeNamesByIngredient = (recipeList, ingredient) => {
+  const nameList = recipeList.filter(recipe =>
+    recipe.Ingredients.some(ing => ing.toLowerCase().includes(ingredient.toLowerCase())
+    )
+  );
 
-
-let choice;
-
-do {
-  choice = displayMenu();
-
-  switch (choice) {
-    case 1:
-
-      break;
-    case 2:
-
-      break;
-    case 3:
-
-      break;
-    case 4:
-
-      break;
-    case 5:
-
-      break;
-    case 0:
-      console.log("Exiting...");
-      break;
-    default:
-      console.log("Invalid input. Please enter a number between 0 and 5.");
+  if (nameList.length === 0) {
+    return "No recipes found with that ingredient.";
+  } else {
+    return nameList.map(recipe => recipe.Name);
   }
-} while (choice !== 0);
+};
+
+console.log('next exercise');
+
+console.log(returnRecipeNamesByIngredient(cakeRecipes, "140g caster sugar"));
+
+// function that takes a list of recipes and a name as input. Returns a single recipe that matches the given name.
+
+const getRecipeByName = (recipeList, name) => {
+  const matchName = recipeList.find(recipe => recipe.Name.toLowerCase().includes(name.toLowerCase()));
+
+  if (matchName.length === 0) {
+    return "No recipe names found with that word.";
+  } else {
+    return matchName.Name;
+  };
+};
+
+console.log(getRecipeByName(cakeRecipes, "pud"));
+
+// function that returns all ingredients of a given recipe list as a single array.
+
+const getAllIngredients = (recipeList) => {
+  const allIngredients = recipeList.Ingredients.reduce( => {
+
+
+  // Part 2
+
+  const displayMenu = () => {
+    console.log("\nRecipe Management System Menu:");
+    console.log("1. Show All Authors");
+    console.log("2. Show Recipe names by Author");
+    console.log("3. Show Recipe names by Ingredient");
+    console.log("4. Get Recipe by Name");
+    console.log("5. Get All Ingredients of Saved Recipes");
+    console.log("0. Exit");
+    const choice = prompt("Enter a number (1-5) or 0 to exit: ");
+    return parseInt(choice);
+  }
+
+
+  let choice;
+
+  do {
+    choice = displayMenu();
+
+    switch (choice) {
+      case 1:
+
+        break;
+      case 2:
+
+        break;
+      case 3:
+
+        break;
+      case 4:
+
+        break;
+      case 5:
+
+        break;
+      case 0:
+        console.log("Exiting...");
+        break;
+      default:
+        console.log("Invalid input. Please enter a number between 0 and 5.");
+    }
+  } while (choice !== 0);
