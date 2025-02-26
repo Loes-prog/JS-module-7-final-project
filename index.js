@@ -34,13 +34,14 @@ getRecipeNames(cakeRecipes);
 // function that return all recipes of a given author, using the filter method.
 
 const returnRecipeNamesByAuthor = (recipeList, author) => {
-  const nameList = recipeList.filter(recipe => recipe.Author === author);
+
+  const nameList = recipeList.filter(recipe => recipe.Author.toLowerCase() === author.toLowerCase());
   return nameList;
 };
 
-console.log('NEW EXCERCISE');
+console.log('NEW EXERCISE');
 
-console.log(returnRecipeNamesByAuthor(cakeRecipes, "Mary Berry"));
+console.log(returnRecipeNamesByAuthor(cakeRecipes, "Mary cadogan"));
 
 
 // Part 2
