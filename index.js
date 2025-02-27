@@ -6,9 +6,9 @@ var prompt = require('prompt-sync')();
 
 // function returns all unique authors of a given recipe list. So every author is only listed once.
 
-const getAuthors = (recipeList) => {
+const getAuthors = (recipes) => {
   const authors = [];
-  recipeList.forEach(recipe => {
+  recipes.forEach(recipe => {
     if (!authors.includes(recipe.Author)) {
       authors.push(recipe.Author);
     };
@@ -21,11 +21,11 @@ console.log(getAuthors(cakeRecipes));
 
 // function that logs the name of each recipe, using object destructuring. If there are no recipes found, it logs that there are no recipes found. 
 
-const getRecipeNames = (recipeList) => {
-  if (recipeList.length === 0) {
+const getRecipeNames = (recipes) => {
+  if (recipes.length === 0) {
     console.log("No recipes found.");
   } else {
-    recipeList.forEach(({ Name }) => {
+    recipes.forEach(({ Name }) => {
       console.log(Name);
     });
   }
@@ -34,12 +34,17 @@ const getRecipeNames = (recipeList) => {
 console.log('---------------------------------------------------------------------------------------------');
 getRecipeNames(cakeRecipes);
 
-// function that return all recipes of a given author, using the filter method.
+// function that return all recipe names of a given author, using the filter method.
 
-const returnRecipeNamesByAuthor = (recipeList, author) => {
+const returnRecipeNamesByAuthor = (recipes, author) => {
 
-  const nameList = recipeList.filter(recipe => recipe.Author.toLowerCase() === author.toLowerCase());
-  return nameList;
+  const nameList = recipes.filter(recipe => recipe.Author.toLowerCase() === author.toLowerCase());
+
+  if (nameList.length === 0) {
+    return "No recipes found with that author name.";
+  } else {
+    return nameList.map(recipe => recipe.Name);
+  }
 };
 
 console.log('---------------------------------------------------------------------------------------------');
@@ -49,8 +54,8 @@ console.log(returnRecipeNamesByAuthor(cakeRecipes, "Mary cadogan"));
 // function that returns a list of recipes that contain a given ingredient. The function takes a list of recipes as input and an ingredient as a string.
 // return the names of the recipes that contain the ingredient.
 
-const returnRecipeNamesByIngredient = (recipeList, ingredient) => {
-  const nameList = recipeList.filter(recipe =>
+const returnRecipeNamesByIngredient = (recipes, ingredient) => {
+  const nameList = recipes.filter(recipe =>
     recipe.Ingredients.some(ing => ing.toLowerCase().includes(ingredient.toLowerCase())
     )
   );
@@ -67,13 +72,13 @@ console.log(returnRecipeNamesByIngredient(cakeRecipes, "140g caster sugar"));
 
 // function that takes a list of recipes and a name as input. Returns a single recipe that matches the given name.
 
-const getRecipeByName = (recipeList, name) => {
-  const matchName = recipeList.find(recipe => recipe.Name.toLowerCase().includes(name.toLowerCase()));
+const getRecipeByName = (recipes, name) => {
+  const matchName = recipes.find(recipe => recipe.Name.toLowerCase().includes(name.toLowerCase()));
 
   if (matchName.length === 0) {
     return "No recipe names found with that word.";
   } else {
-    return matchName.Name;
+    return matchName;
   };
 };
 
@@ -82,23 +87,30 @@ console.log(getRecipeByName(cakeRecipes, "pud"));
 
 // function that returns all ingredients of a given recipe list as a single array. Using 
 
-const getAllIngredients = (recipeList) => {
-  const allIngredients = recipeList.reduce((accumulator, recipe) => {
+const getAllIngredients = (recipes) => {
+  const allIngredients = recipes.reduce((accumulator, recipe) => {
     return accumulator.concat(recipe.Ingredients);
   }, []);
   return allIngredients;
 };
 
-// shorter list for input function getAllIngredients
+console.log('---------------------------------------------------------------------------------------------');
 
-const shorterRecipeList = returnRecipeNamesByAuthor(cakeRecipes, "Mary cadogan");
+console.log(getAllIngredients(cakeRecipes));
+
+// shorter list for testing input instead of cakeRecipes: function getAllIngredients
 
 console.log('---------------------------------------------------------------------------------------------');
 
-console.log(getAllIngredients(shorterRecipeList));
+const recipesArray = []; // empty array to store the result of getRecipeByName
+const result = getRecipeByName(cakeRecipes, "pud");
+recipesArray.push(result);
+console.log(getAllIngredients(recipesArray));
 
 
 // Part 2
+
+console.log('---------------------------------------------------------------------------------------------');
 
 const displayMenu = () => {
   console.log("\nRecipe Management System Menu:");
@@ -112,6 +124,7 @@ const displayMenu = () => {
   return parseInt(choice);
 }
 
+const savedRecipes = [];
 
 let choice;
 
@@ -120,20 +133,43 @@ do {
 
   switch (choice) {
     case 1:
-      console.log('Your choice is 1. You can find all authors below:');
+      console.log("Your choice is 1. You can find all authors below:");
       console.log(getAuthors(cakeRecipes))
       break;
     case 2:
+      const authorPrompt = prompt("Your choice is 2. Enter the author's name: ");
+      console.log("You can find all recipes by the author below:");
+      console.log(returnRecipeNamesByAuthor(cakeRecipes, authorPrompt));
 
       break;
     case 3:
-
+      const ingredientPrompt = prompt("Your choice is 3. Enter the ingredient: ");
+      console.log("You can find all recipes by the ingredient below:");
+      console.log(returnRecipeNamesByIngredient(cakeRecipes, ingredientPrompt));
       break;
     case 4:
+      const recipeNamePrompt = prompt("Your choice is 4. Enter the recipe name: ");
+      console.log("You can find the recipe below:");
 
+      const choosenRecipe = getRecipeByName(cakeRecipes, recipeNamePrompt);
+      console.log(choosenRecipe);
+
+      const saveRecipe = prompt("Do your want to save this recipe? Enter Y or N: ").toLocaleLowerCase();
+
+      if (saveRecipe === "y") {
+        savedRecipes.push(choosenRecipe);
+        console.log("Recipe saved!");
+      } else {
+        console.log("Recipe not saved.");
+      };
       break;
     case 5:
-
+      console.log("Your choice is 5. You can find all ingredients of saved recipes below:");
+      if (savedRecipes.length === 0) {
+        console.log("No saved recipes found.");
+      } else {
+        console.log(getAllIngredients(savedRecipes));
+      };
       break;
     case 0:
       console.log("Exiting...");
