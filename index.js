@@ -1,6 +1,7 @@
 'use strict';
 
 const cakeRecipes = require("./cake-recipes.json");
+var prompt = require('prompt-sync')();
 
 
 // function returns all unique authors of a given recipe list. So every author is only listed once.
@@ -119,7 +120,8 @@ do {
 
   switch (choice) {
     case 1:
-
+      console.log('Your choice is 1. You can find all authors below:');
+      console.log(getAuthors(cakeRecipes))
       break;
     case 2:
 
